@@ -145,12 +145,12 @@
 
             <p>Vous Preferez etre contacté</p>
             <div class="checkbox-radio-group">
-                <input type="radio" id="whatsapp">
+                <input type="radio" name="contactMethod" id="whatsapp" value="Message Sur WHATSAPP">
                 <label for="whatsapp">Par un Message Sur WHATSAPP</label>
             </div>
 
             <div class="checkbox-radio-group">
-                <input type="radio" id="telephone">
+                <input type="radio" name="contactMethod" id="telephone" value="Appel Téléphonique">
                 <label for="telephone">Par un Appel Téléphonique</label>
             </div>
 
@@ -159,12 +159,12 @@
             <p id="responseError" class="hidden">Veuillez remplir tous les champs avec des informations valides avant de
                 soumettre le formulaire.</p>
         </form>
-
     </div>
     <script>
-        if (window.innerWidth <= 768) {
+         if (window.innerWidth <= 768) {
             window.location.href = "mobile.html"
         }
+        
         let validEmail = ""
         let validPhone = ""
         let validName = false
@@ -260,33 +260,32 @@
             })
         })
 
-
         document.getElementById("contactForm").addEventListener("submit", function (event) {
-            event.preventDefault()
+            event.preventDefault();
 
-            let name = document.getElementById("name").value
-            let email = validEmail
-            let telephone = validPhone
-            let ecole = document.getElementById("ecole").value
-            let filiere = document.getElementById("filiere").value
-            let ville = document.getElementById("ville").value
+            let name = document.getElementById("name").value;
+            let email = validEmail;
+            let telephone = validPhone;
+            let ecole = document.getElementById("ecole").value;
+            let filiere = document.getElementById("filiere").value;
+            let ville = document.getElementById("ville").value;
 
-            let formations = []
+            let formations = [];
             if (document.getElementById("algorithmiques").checked) {
-                formations.push("Formation En Algorithmiques")
+                formations.push("Formation En Algorithmiques");
             }
             if (document.getElementById("python").checked) {
-                formations.push("Formation En Langage Python")
+                formations.push("Formation En Langage Python");
             }
             if (document.getElementById("c").checked) {
-                formations.push("Formation En Langage C")
+                formations.push("Formation En Langage C");
             }
 
-            let contactPreference = ""
+            let contactPreference = "";
             if (document.getElementById("whatsapp").checked) {
-                contactPreference = "Message Sur WHATSAPP"
+                contactPreference = "Message Sur WHATSAPP";
             } else if (document.getElementById("telephone").checked) {
-                contactPreference = "Appel Téléphonique"
+                contactPreference = "Appel Téléphonique";
             }
 
             let clientData = {
@@ -298,29 +297,48 @@
                 ville: ville,
                 formations: formations.join(", "),
                 contactPreference: contactPreference
-            }
+            };
 
-            let storedData = JSON.parse(localStorage.getItem("formSubmissions") || "[]")
-            storedData.push(clientData)
-            localStorage.setItem("formSubmissions", JSON.stringify(storedData))
+            // Send data to the Go server
+            fetch('http://localhost:8080/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(clientData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("responseMessage").textContent = "Merci, nous vous contacterons bientôt.";
+                    document.getElementById("responseMessage").style.color = "green";
 
-            document.getElementById("responseMessage").textContent = "Merci, nous vous contacterons bientôt."
-            document.getElementById("responseMessage").style.color = "green"
+                    // Reset form
+                    this.reset();
+                    validEmail = "";
+                    validPhone = "";
+                    validName = false;
+                    validEcole = false;
+                    validFiliere = false;
+                    validVille = false;
+                    validFormation = false;
+                    validContactPreference = false;
 
-            this.reset()
-            validEmail = ""
-            validPhone = ""
-            validName = false
-            validEcole = false
-            validFiliere = false
-            validVille = false
-            validFormation = false
-            validContactPreference = false
+                    document.getElementById("submitBtn").disabled = true;
+                })
+                .catch(error => {
+                    document.getElementById("responseMessage").textContent = "Erreur lors de l'envoi du formulaire. Veuillez réessayer.";
+                    document.getElementById("responseMessage").style.color = "red";
+                    console.error('Error:', error);
+                });
+        });
 
-            document.getElementById("submitBtn").disabled = true
-        })
+
     </script>
-
 </body>
 
 </html>

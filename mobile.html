@@ -24,10 +24,14 @@
             display: block;
         }
 
+        .hidden {
+            display: none;
+        }
+
         /* General Form Styling */
         #contactForm {
-            width: 75%;
-            max-width: 400px;
+            width: 90%;
+            max-width: 600px;
             margin: 20px auto;
             padding: 20px 20px;
             background: linear-gradient(45deg, #3ce9a4, #ebe9e7);
@@ -98,56 +102,66 @@
 
 <body>
     <div class="content">
-        <img src="mobile-version.png" alt="Landing Page" class="landing-image">
+        <img src="laptop-version.png" alt="Landing Page" class="landing-image">
+        <form id="contactForm">
+            <h2>Formulaire de Contact</h2>
+            <input type="text" id="name" placeholder="Nom et Prénon" required>
+            <div>
+                <input type="text" id="email" placeholder="Email" required>
+                <p class="hidden" id="emailError">Exemple d'un e-mail valide: test@gmail.com</p>
+            </div>
+            <div>
+                <input type="text" id="tel" placeholder="Numéro de téléphone" required>
+                <p class="hidden" id="numberError">Veuillez entrer un numéro de téléphone valide commençant par 06 ou 07
+                    et contenant exactement 10 chiffres.</p>
+            </div>
+            <select id="ecole" required>
+                <option value="FACULTE">FACULTE</option>
+                <option value="FST">FST</option>
+                <option value="ENSA">ENSA</option>
+                <option value="ENSAM">ENSAM</option>
+                <option value="EST">EST</option>
+                <option value="ENCG">ENCG</option>
+                <option value="OFPPT">OFPPT</option>
+                <option value="AUTRE">AUTRE</option>
+            </select>
+            <input type="text" id="filiere" placeholder="Filière" required>
+            <input type="text" id="ville" placeholder="Ville" required>
+            <p>Formation choisie</p>
+            <div class="checkbox-radio-group">
+                <input type="checkbox" id="algorithmiques">
+                <label for="algorithmiques">Formation En Algorithmiques</label>
+            </div>
+
+            <div class="checkbox-radio-group">
+                <input type="checkbox" id="python">
+                <label for="python">Formation En Langage Python</label>
+            </div>
+
+            <div class="checkbox-radio-group">
+                <input type="checkbox" id="c">
+                <label for="c">Formation En Langage C</label>
+            </div>
+
+            <p>Vous Preferez etre contacté</p>
+            <div class="checkbox-radio-group">
+                <input type="radio" name="contactMethod" id="whatsapp" value="Message Sur WHATSAPP">
+                <label for="whatsapp">Par un Message Sur WHATSAPP</label>
+            </div>
+
+            <div class="checkbox-radio-group">
+                <input type="radio" name="contactMethod" id="telephone" value="Appel Téléphonique">
+                <label for="telephone">Par un Appel Téléphonique</label>
+            </div>
+
+            <button type="submit" id="submitBtn" disabled>Submit</button>
+            <p id="responseMessage"></p>
+            <p id="responseError" class="hidden">Veuillez remplir tous les champs avec des informations valides avant de
+                soumettre le formulaire.</p>
+        </form>
     </div>
-    <form id="contactForm">
-        <h2>Formulaire de Contact</h2>
-        <input type="text" id="name" placeholder="Nom et Prénon" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="text" id="tel" placeholder="Numéro de téléphone" required>
-        <select id="ecole" required>
-            <option value="FACULTE">FACULTE</option>
-            <option value="FST">FST</option>
-            <option value="ENSA">ENSA</option>
-            <option value="ENSAM">ENSAM</option>
-            <option value="EST">EST</option>
-            <option value="ENCG">ENCG</option>
-            <option value="OFPPT">OFPPT</option>
-            <option value="AUTRE">AUTRE</option>
-        </select>
-        <input type="text" id="filiere" placeholder="Filière" required>
-        <input type="text" id="ville" placeholder="Ville" required>
-        <p>Formation choisie</p>
-        <div class="checkbox-radio-group">
-            <input type="checkbox" id="algorithmiques">
-            <label for="algorithmiques">Formation En Algorithmiques</label>
-        </div>
-
-        <div class="checkbox-radio-group">
-            <input type="checkbox" id="python">
-            <label for="python">Formation En Langage Python</label>
-        </div>
-
-        <div class="checkbox-radio-group">
-            <input type="checkbox" id="c">
-            <label for="c">Formation En Langage C</label>
-        </div>
-
-        <p>Vous Preferez etre contacté</p>
-        <div class="checkbox-radio-group">
-            <input type="radio" id="whatsapp">
-            <label for="whatsapp">Par un Message Sur WHATSAPP</label>
-        </div>
-
-        <div class="checkbox-radio-group">
-            <input type="radio" id="telephone">
-            <label for="telephone">Par un Appel Téléphonique</label>
-        </div>
-
-        <button type="submit">Submit</button>
-        <p id="responseMessage"></p>
-    </form>
     <script>
+
         if (window.innerWidth > 768) {
             window.location.href = "laptop.html"
         }
@@ -247,33 +261,32 @@
             })
         })
 
-
         document.getElementById("contactForm").addEventListener("submit", function (event) {
-            event.preventDefault()
+            event.preventDefault();
 
-            let name = document.getElementById("name").value
-            let email = validEmail
-            let telephone = validPhone
-            let ecole = document.getElementById("ecole").value
-            let filiere = document.getElementById("filiere").value
-            let ville = document.getElementById("ville").value
+            let name = document.getElementById("name").value;
+            let email = validEmail;
+            let telephone = validPhone;
+            let ecole = document.getElementById("ecole").value;
+            let filiere = document.getElementById("filiere").value;
+            let ville = document.getElementById("ville").value;
 
-            let formations = []
+            let formations = [];
             if (document.getElementById("algorithmiques").checked) {
-                formations.push("Formation En Algorithmiques")
+                formations.push("Formation En Algorithmiques");
             }
             if (document.getElementById("python").checked) {
-                formations.push("Formation En Langage Python")
+                formations.push("Formation En Langage Python");
             }
             if (document.getElementById("c").checked) {
-                formations.push("Formation En Langage C")
+                formations.push("Formation En Langage C");
             }
 
-            let contactPreference = ""
+            let contactPreference = "";
             if (document.getElementById("whatsapp").checked) {
-                contactPreference = "Message Sur WHATSAPP"
+                contactPreference = "Message Sur WHATSAPP";
             } else if (document.getElementById("telephone").checked) {
-                contactPreference = "Appel Téléphonique"
+                contactPreference = "Appel Téléphonique";
             }
 
             let clientData = {
@@ -285,29 +298,48 @@
                 ville: ville,
                 formations: formations.join(", "),
                 contactPreference: contactPreference
-            }
+            };
 
-            let storedData = JSON.parse(localStorage.getItem("formSubmissions") || "[]")
-            storedData.push(clientData)
-            localStorage.setItem("formSubmissions", JSON.stringify(storedData))
+            // Send data to the Go server
+            fetch('http://localhost:8080/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(clientData)
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById("responseMessage").textContent = "Merci, nous vous contacterons bientôt.";
+                    document.getElementById("responseMessage").style.color = "green";
 
-            document.getElementById("responseMessage").textContent = "Merci, nous vous contacterons bientôt."
-            document.getElementById("responseMessage").style.color = "green"
+                    // Reset form
+                    this.reset();
+                    validEmail = "";
+                    validPhone = "";
+                    validName = false;
+                    validEcole = false;
+                    validFiliere = false;
+                    validVille = false;
+                    validFormation = false;
+                    validContactPreference = false;
 
-            this.reset()
-            validEmail = ""
-            validPhone = ""
-            validName = false
-            validEcole = false
-            validFiliere = false
-            validVille = false
-            validFormation = false
-            validContactPreference = false
+                    document.getElementById("submitBtn").disabled = true;
+                })
+                .catch(error => {
+                    document.getElementById("responseMessage").textContent = "Erreur lors de l'envoi du formulaire. Veuillez réessayer.";
+                    document.getElementById("responseMessage").style.color = "red";
+                    console.error('Error:', error);
+                });
+        });
 
-            document.getElementById("submitBtn").disabled = true
-        })
+
     </script>
-
 </body>
 
 </html>
