@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Infos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f7f7f7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        caption {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            font-style: italic;
+            color: #666;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .refresh-btn {
+            background-color: #2196F3;
+        }
+
+        .refresh-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .export-btn {
+            background-color: #ff9800;
+        }
+
+        .export-btn:hover {
+            background-color: #e68a00;
+        }
+
+        .return-btn {
+            background-color: #607d8b;
+        }
+
+        .return-btn:hover {
+            background-color: #546e7a;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+        }
+
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controls">
+        <button id="returnBtn" class="return-btn">Retour au Formulaire</button>
+        <button id="refreshBtn" class="refresh-btn">Actualiser les Données</button>
+        <button id="deleteBtn" class="delete-btn">Effacer les Informations</button>
+    </div>
+
+    <table id="clientTable">
+        <caption>Client Information</caption>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Tel</th>
+                <th>University</th>
+                <th>Filiere</th>
+                <th>City</th>
+                <th>Formation</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            loadClientData()
+
+            document.getElementById('returnBtn').addEventListener('click', function () {
+                if (window.innerWidth > 768) {
+                    window.location.href = "laptop.html"
+                } else {
+                    window.location.href = "mobile.html"
+                }
+            })
+
+            document.getElementById('refreshBtn').addEventListener('click', loadClientData)
+            document.getElementById('deleteBtn').addEventListener('click', deleteAllData)
+        })
+
+        function loadClientData() {
+            const clientData = JSON.parse(localStorage.getItem('formSubmissions') || '[]')
+            const tableBody = document.getElementById('tableBody')
+
+            tableBody.innerHTML = ''
+
+            if (clientData.length === 0) {
+                const noDataRow = document.createElement('tr')
+                noDataRow.innerHTML = '<td colspan="8" class="no-data">Aucune information client disponible</td>'
+                tableBody.appendChild(noDataRow)
+                return
+            }
+
+            clientData.forEach(client => {
+                const row = document.createElement('tr')
+
+                row.innerHTML = `
+                    <td>${client.name || ''}</td>
+                    <td>${client.email || ''}</td>
+                    <td>${client.telephone || ''}</td>
+                    <td>${client.ecole || ''}</td>
+                    <td>${client.filiere || ''}</td>
+                    <td>${client.ville || ''}</td>
+                    <td>${client.formations || ''}</td>
+                    <td>${client.contactPreference || ''}</td>
+                `
+
+                tableBody.appendChild(row)
+            })
+        }
+
+        function deleteAllData() {
+            if (confirm('Êtes-vous sûr de vouloir supprimer toutes les informations clients? Cette action est irréversible.')) {
+                localStorage.removeItem('formSubmissions')
+
+                loadClientData()
+
+                alert('Toutes les informations clients ont été supprimées.')
+            }
+        }
+    </script>
+</body>
+
+</html>
